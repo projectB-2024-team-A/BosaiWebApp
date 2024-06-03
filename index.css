@@ -1,0 +1,6 @@
+/*マップの大きさ*/
+#map { 
+    width: 480px;
+    height: 320px; 
+    background-color: white;
+}
