@@ -1,7 +1,14 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getDatabase } from "firebase/database";
+//import { initializeApp } from "firebase/app";
+//import { getAnalytics } from "firebase/analytics";
+//import { getDatabase } from "firebase/database";
+
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
 
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -12,6 +19,7 @@ import { getDatabase } from "firebase/database";
 const firebaseConfig = {
   apiKey: "AIzaSyDG9Pq3_aoeqn8cicipFOw9C10t2p3HD-o",
   authDomain: "bosaiwebapp.firebaseapp.com",
+  databaseURL:"https://bosaiwebapp-default-rtdb.firebaseio.com/",
   projectId: "bosaiwebapp",
   storageBucket: "bosaiwebapp.appspot.com",
   messagingSenderId: "72888901207",
@@ -20,10 +28,31 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+const app =initializeApp(firebaseConfig);
+const firestore = getFirestore(app);
 const database = getDatabase(app);
 
+
+const databaseRef = ref(database);
+get(databaseRef).then((snapshot) => {
+  if (snapshot.exists()) {
+    const data = snapshot.val();
+    console.log(data);
+  } else {
+    console.log("No data available");
+  }
+}).catch((error) => {
+  console.error("Error getting data:", error);
+});
+
+const collectionRef = collection(firestore, "Coordinate");
+getDocs(collectionRef).then((querySnapshot) => {
+  querySnapshot.forEach((doc) => {
+    console.log(`${doc.id} => ${JSON.stringify(doc.data())}`);
+  });
+}).catch((error) => {
+  console.error("Error getting documents: ", error);
+});
 
 /*
 //ブラウザの準備が出来たら実行する
