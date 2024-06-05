@@ -8,7 +8,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/fireba
 import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-//データベースの設定(自分の)
+//データベースの設定
 const firebaseConfig = {
   apiKey: "AIzaSyDG9Pq3_aoeqn8cicipFOw9C10t2p3HD-o",
   authDomain: "bosaiwebapp.firebaseapp.com",
@@ -20,7 +20,7 @@ const firebaseConfig = {
   measurementId: "G-BK4W95VS7G"
 };
 
-//ライブラリを使用できるようにする？
+//ライブラリを使用できるようにする
 const app =initializeApp(firebaseConfig);
 const firestore = getFirestore(app);
 const database = getDatabase(app);
@@ -44,8 +44,8 @@ get(databaseRef).then((snapshot) => {
 const collectionRef = collection(firestore, "Coordinate");
 getDocs(collectionRef).then((querySnapshot) => {
   querySnapshot.forEach((doc) => {
-    //console.log(doc.data().latitude);
-    //console.log(doc.data().longitude);
+    console.log("緯度は "+doc.data().longitude);
+    console.log("経度は "+doc.data().latitude);
 
     //取得した緯度経度データの代入
     let longitude=doc.data().longitude;
@@ -72,9 +72,6 @@ function drawMap(longitude,latitude) {
 
     //マーカーの設置
     L.marker([longitude, latitude]).addTo(map).bindPopup("文教大学湘南キャンパス").openPopup;
-
-    console.log(longitude);
-
 
     /*
     //範囲(円)の設置
