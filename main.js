@@ -73,40 +73,60 @@ function drawMap(longitude,latitude) {
     //マーカーの設置
     L.marker([longitude, latitude]).addTo(map).bindPopup("文教大学湘南キャンパス").openPopup;
 
+    
     //以下現在地の取得
     //Geolocation APIに端末が対応しているか判定
     if(navigator.geolocation)
-      {
-        //対応している場合
-        //現在地を取得
-        navigator.geolocation.watchPosition( getPosition , errorIndication) ;
-      }
-      else
-      {
-        //対応していない場合
-        alert("お使いの端末では位置情報を取得できません")
-      }
+    {
+      //対応している場合
+      //現在地を取得
+      navigator.geolocation.watchPosition( getPosition , errorIndication) ;
+    }
+    else
+    {
+      //対応していない場合
+      alert("お使いの端末では位置情報を取得できません")
+    }
   
-      //位置情報の取得に成功した場合に実行される関数
-      function getPosition(position)
-      {
-        // 緯度を取得
-        let nowLatitude = position.coords.latitude;
-  
-        // 経度を取得
-        let nowLongitude = position.coords.longitude;
-  
-        //L.marker([nowLatitude, nowLongitude]).addTo(map).bindPopup("現在地").openPopup;
+    //位置情報の取得に成功した場合に実行される関数
+    let nowPosition; //位置情報を地図に表示したかどうか確認するための変数
+    function getPosition(position)
+    {
+      //位置情報が既に表示してあるかどうか
+      //してある場合は表示を消す（複数マークが出ないように）
+      if (nowPosition){
+        map.removeLayer(nowPosition);
       }
-  
-      //位置情報の取得に失敗した場合に実行される関数
-      function errorIndication(error)
-      {
-        // エラーコードのメッセージを表示
-        alert("エラーが発生しました") ;
-      }
+      //現在地を表示
+      // 緯度を取得
+      let nowLatitude = position.coords.latitude;
 
-      //現在地の取得ここまで
+      // 経度を取得
+      let nowLongitude = position.coords.longitude;
+
+      //向いている方向を取得
+      let nowHeading = position.coords.heading;
+
+      //円で現在地を表示
+      nowPosition = L.circle([nowLatitude, nowLongitude], {
+        radius: 10,
+        color: "#4781ed",
+        fillColor: "#6495ed",
+        fillOpacity: 0.5,
+      }).addTo(map).bindPopup("現在地").openPopup;
+    }
+
+    //拡大率によって現在地を示す円の大きさを変えるとき使う"map.getZoom()"のお試し文。キーを何か押すとコンソールにマップの拡大率を表示
+    //document.onkeydown = event => console.log(map.getZoom());
+
+    //位置情報の取得に失敗した場合に実行される関数
+    function errorIndication(error)
+    {
+      // エラーコードのメッセージを表示
+      alert("エラーが発生しました") ;
+    }
+
+    //現在地の取得ここまで
 
     /*
     //範囲(円)の設置
