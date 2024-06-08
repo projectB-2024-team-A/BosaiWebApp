@@ -96,7 +96,7 @@ function drawMap(longitude,latitude) {
         // 経度を取得
         let nowLongitude = position.coords.longitude;
   
-        L.marker([nowLatitude, nowLongitude]).addTo(map).bindPopup("現在地").openPopup;
+        //L.marker([nowLatitude, nowLongitude]).addTo(map).bindPopup("現在地").openPopup;
       }
   
       //位置情報の取得に失敗した場合に実行される関数
