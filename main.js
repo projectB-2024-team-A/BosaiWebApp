@@ -73,6 +73,41 @@ function drawMap(longitude,latitude) {
     //マーカーの設置
     L.marker([longitude, latitude]).addTo(map).bindPopup("文教大学湘南キャンパス").openPopup;
 
+    //以下現在地の取得
+    //Geolocation APIに端末が対応しているか判定
+    if(navigator.geolocation)
+      {
+        //対応している場合
+        //現在地を取得
+        navigator.geolocation.watchPosition( getPosition , errorIndication) ;
+      }
+      else
+      {
+        //対応していない場合
+        alert("お使いの端末では位置情報を取得できません")
+      }
+  
+      //位置情報の取得に成功した場合に実行される関数
+      function getPosition(position)
+      {
+        // 緯度を取得
+        let nowLatitude = position.coords.latitude;
+  
+        // 経度を取得
+        let nowLongitude = position.coords.longitude;
+  
+        L.marker([nowLatitude, nowLongitude]).addTo(map).bindPopup("現在地").openPopup;
+      }
+  
+      //位置情報の取得に失敗した場合に実行される関数
+      function errorIndication(error)
+      {
+        // エラーコードのメッセージを表示
+        alert("エラーが発生しました") ;
+      }
+
+      //現在地の取得ここまで
+
     /*
     //範囲(円)の設置
     L.circle([35.370265, 139.416012],{
