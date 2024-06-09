@@ -61,18 +61,6 @@ getDocs(collectionRef).then((querySnapshot) => {
 
 //マップ描画関数(引数に緯度経度を持たせている)
 function drawMap(longitude,latitude) {
-//MapIDタグに移したい場所の座標を代入  ([緯度,軽度],ズーム)
-    var map = L.map('map').setView([35.370265, 139.416012], 16);
-
-    //マップの情報(どこのマップデータを使うや、マックスズーム率やら)
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    }).addTo(map);
-
-    //マーカーの設置
-    L.marker([longitude, latitude]).addTo(map).bindPopup("文教大学湘南キャンパス").openPopup;
-
     
     //以下現在地の取得
     //Geolocation APIに端末が対応しているか判定
@@ -107,6 +95,19 @@ function drawMap(longitude,latitude) {
       //向いている方向を取得
       let nowHeading = position.coords.heading;
 
+      //Mapタグに現在地の座標を代入  ([緯度,軽度],ズーム)
+      let map = L.map('map').setView([nowLatitude, nowLongitude], 18.5);
+
+      //マップの情報(どこのマップデータを使うや、マックスズーム率やら)
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      }).addTo(map);
+
+    //マーカーの設置
+    L.marker([longitude, latitude]).addTo(map).bindPopup("文教大学湘南キャンパス").openPopup;
+
+
       //円で現在地を表示
       nowPosition = L.circle([nowLatitude, nowLongitude], {
         radius: 10,
@@ -129,14 +130,14 @@ function drawMap(longitude,latitude) {
     //現在地の取得ここまで
 
     /*
-    //範囲(円)の設置
+    //範囲(円)の設置テスト
     L.circle([35.370265, 139.416012],{
         color:"red",fillcolor:"#f03",fillOpacity:0.2,radius:120
 
 
     }).addTo(map)
 
-
+    //経路の表示テスト
     var startPoint = L.latLng(35.3698192,139.4134905); // 文教大学湘南キャンパス
     var endPoint = L.latLng(35.3303039,139.4042546); // 茅ヶ崎駅
 
