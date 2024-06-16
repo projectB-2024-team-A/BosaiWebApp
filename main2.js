@@ -68,7 +68,24 @@ function drawMap() {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   }).addTo(map);
+  //プラグインによる追加箇所
+  var compass = new L.Control.Compass({ position: 'topright', autoActive: true, showDigit: true });
+  compass.addTo(map);
+  var option = {
+    position: 'topright',
+    strings: {
+        title: "現在地を表示",
+        popup: "いまここ"
+    },
+    locateOptions: {
+      maxZoom: 16
+    }
+  }
+   
+  var lc = L.control.locate(option).addTo(map);
+lc.start();
 }
+
 
 // 位置情報取得に成功した場合に実行される関数
 function getPosition(position) {
@@ -92,10 +109,12 @@ function getPosition(position) {
   map.setView([nowLatitude, nowLongitude], 18.5);
 }
 
+
 // 位置情報取得に失敗した場合に実行される関数
 function errorIndication(error) {
   alert("エラーが発生しました");
 }
+
 
 // 避難所のマーカーを追加する関数(引数に緯度、経度、施設の名前がある)
 function addShelterMarker(latitude, longitude, name) {
@@ -103,5 +122,4 @@ function addShelterMarker(latitude, longitude, name) {
   const marker = L.marker([latitude, longitude]).addTo(map).bindPopup(name).openPopup();
   //マーカーの情報を配列に入れる
   shelterMarkers.push(marker);
-
 }
