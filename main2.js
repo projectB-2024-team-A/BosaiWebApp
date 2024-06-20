@@ -140,7 +140,7 @@ function getPosition(position) {
     map.removeLayer(nowPosition);
   }
 
-  getHeading();
+  //getHeading();
   // 現在地を表示
   nowIcon = L.circleMarker([nowLatitude, nowLongitude], {
     radius: 15,
