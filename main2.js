@@ -146,6 +146,7 @@ function getPosition(position) {
     fillOpacity: 0.5,
   }).addTo(map).openPopup();
   nowIcon._path.setAttribute('id', 'nowIcon');
+  nowPosition = nowIcon;
 
   getHeading();
 }
@@ -159,7 +160,6 @@ function getHeading(){
   var y = haedingPosition.top;
 
   //CSSのプロパティーを変更して位置を更新
-  let nowHeadingIcon = document.querySelector("#headingIcon");
   nowHeadingIcon.style.transform = "translate(" + (x - 35) + "px," + (y - 120) + "px)";
 }
 
