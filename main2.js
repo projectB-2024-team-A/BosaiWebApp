@@ -141,8 +141,6 @@ function getPosition(position) {
   nowIcon._path.setAttribute('id', 'nowIcon');
 
   nowHeadingIcon.style.transform = "rotate("+ nowHeading +"deg)";
-  alert(nowHeading);
-  alert("成功");
   getHeading();
 }
 
