@@ -142,6 +142,7 @@ function getPosition(position) {
 
   nowHeadingIcon.style.transform = "rotate("+ nowHeading +"deg)";
   alert(nowHeading);
+  alert("成功");
   getHeading();
 }
 
