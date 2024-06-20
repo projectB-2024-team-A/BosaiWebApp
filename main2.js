@@ -159,7 +159,6 @@ function getHeading(){
   var x = haedingPosition.left;
   var y = haedingPosition.top;
 
-  console.log("Heading Position:", x, y);
   //CSSのプロパティーを変更して位置を更新
   nowHeadingIcon.style.transform = "translate(" + (x - 35) + "px," + (y - 120) + "px)";
 }
@@ -175,7 +174,7 @@ function mapEvent(){
   const headingTimer = setInterval(() => {
     let i = 0;
     //方向マークの位置を更新
-    navigator.geolocation.getCurrentPosition(getHeading, errorIndication);
+    navigator.geolocation.getCurrentPosition(getPosition, errorIndication);
     i+=1;
     //もしクリックされなくなったら処理を中止
     eventElement.addEventListener("onmouseup", function(){
