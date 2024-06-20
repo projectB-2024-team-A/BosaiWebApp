@@ -13,13 +13,11 @@ html, body {
 #headingIcon {
     /*位置、透明度、表示順のプロパティー*/
     position: fixed;
-    transform: translate(0, 0);
     opacity: 0.4;
     height: 0px;
     width: 0px;
     z-index: 1000;
     transform-origin: center;
-    transform:rotate(0deg);
 
     /*扇型*/
     border-radius: 100%;
