@@ -22,7 +22,7 @@
     <script src="js/leaflet-compass.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="css/L.Control.Locate.min.css" />
-    <script src="js/L.Control.Locate.min.js"></script>
+    <!--<script src="js/L.Control.Locate.min.js"></script> これがあると方向の表示がおかしくなってしまうので、一時的にコメントアウトしています。すみません-->
 <!-- plugin -->
  
         <!--Leaflet Routing Machine CSS-->
@@ -33,7 +33,9 @@
     </head>
     <body>
         <h1>LeafLet</h1>
-        <div id="map"></div>
+        <div id="map">
+            <div id="headingIcon"></div>
+        </div>
         <script type="module" src="main2.js"></script>
     </body>
 </html>

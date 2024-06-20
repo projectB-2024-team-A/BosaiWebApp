@@ -54,7 +54,7 @@ const shelterMarkers = []; // 避難所のマーカーを保持する配列(情�
 function drawMap() {
   // Geolocation APIに対応しているか確認
   if (navigator.geolocation) {
-    navigator.geolocation.watchPosition(getPosition, errorIndication);
+    navigator.geolocation.getCurrentPosition(getPosition, errorIndication);
   } else {
     alert("お使いの端末では位置情報を取得できません");
   }
@@ -86,11 +86,45 @@ function drawMap() {
 lc.start();
 }
 
+//ここから方向を示す印の位置更新についてのプログラム
+//1秒ごとに現在位置を更新
+window.onload = function(){
+  setInterval(() => {
+    navigator.geolocation.getCurrentPosition(getPosition, errorIndication);
+  }, 1000)
+}
 
+var eventElement = document.getElementById( "map" ) ;
+//マップ上でクリックしたら実行
+eventElement.addEventListener("onmousedown", function(){
+  mapEvent();
+});
+
+//スクロールされたら実行
+eventElement.addEventListener("wheel", function(){
+  mapEvent();
+});
+//ここまで方向を示す印の位置更新についてのプログラム
+
+
+//ここから関数
+// 避難所のマーカーを追加する関数(引数に緯度、経度、施設の名前がある)
+function addShelterMarker(latitude, longitude, name) {
+  //マーカーの描画
+  const marker = L.marker([latitude, longitude]).addTo(map).bindPopup(name).openPopup();
+  //マーカーの情報を配列に入れる
+  shelterMarkers.push(marker);
+}
+
+//ここから位置情報関係の関数
+// 位置情報取得に成功した場合に実行される関数
+let nowIcon;
+let nowHeadingIcon = document.querySelector("#headingIcon");
 // 位置情報取得に成功した場合に実行される関数
 function getPosition(position) {
   const nowLatitude = position.coords.latitude;
   const nowLongitude = position.coords.longitude;
+  const nowHeading = position.coords.heading;
 
   // すでに現在地が表示されている場合は削除
   if (nowPosition) {
@@ -98,15 +132,30 @@ function getPosition(position) {
   }
 
   // 現在地を表示
-  nowPosition = L.circleMarker([nowLatitude, nowLongitude], {
+  nowIcon = L.circleMarker([nowLatitude, nowLongitude], {
     radius: 15,
     color: "#4781ed",
     fillColor: "#6495ed",
     fillOpacity: 0.5,
-  }).addTo(map).bindPopup("現在地").openPopup();
+  }).addTo(map).openPopup();
+  nowIcon._path.setAttribute('id', 'nowIcon');
 
-  // マップの表示位置を現在地に設定
-  map.setView([nowLatitude, nowLongitude], 18.5);
+  nowHeadingIcon.style.transform = "rotate("+ nowHeading +"deg)";
+
+  getHeading();
+}
+
+//方向を示すマークの位置を変更するためだけの関数（mapEventという関数の中で使われている）
+function getHeading(){
+  var haedingPosition = nowIcon._path.getBoundingClientRect();
+
+  //マークがある位置を取得
+  var x = haedingPosition.left;
+  var y = haedingPosition.top;
+
+  //CSSのプロパティーを変更して位置を更新
+  let nowHeadingIcon = document.querySelector("#headingIcon");
+  nowHeadingIcon.style.transform = "translate(" + (x - 35) + "px," + (y - 120) + "px)";
 }
 
 
@@ -115,11 +164,21 @@ function errorIndication(error) {
   alert("エラーが発生しました");
 }
 
-
-// 避難所のマーカーを追加する関数(引数に緯度、経度、施設の名前がある)
-function addShelterMarker(latitude, longitude, name) {
-  //マーカーの描画
-  const marker = L.marker([latitude, longitude]).addTo(map).bindPopup(name).openPopup();
-  //マーカーの情報を配列に入れる
-  shelterMarkers.push(marker);
+//マップをズーム、スクロールしたりしたときに実行する用の関数
+function mapEvent(){
+  const headingTimer = setInterval(() => {
+    let i = 0;
+    //方向マークの位置を更新
+    navigator.geolocation.getCurrentPosition(getHeading, errorIndication);
+    i+=1;
+    //もしクリックされなくなったら処理を中止
+    eventElement.addEventListener("onmouseup", function(){
+      clearInterval(headingTimer)
+    });
+    //クリックしなくなったときにonmouseupが反応しなかった場合の対処
+    if (i>200){
+      clearInterval(headingTimer)
+    }
+  }, 40)
+  console.log("成功");
 }
