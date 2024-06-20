@@ -104,6 +104,13 @@ eventElement.addEventListener("onmousedown", function(){
 eventElement.addEventListener("wheel", function(){
   mapEvent();
 });
+
+if (window.DeviceOrientationEvent) {
+  window.addEventListener('deviceorientation', function(event) {
+      var nowHeading = event.alpha;
+      nowHeadingIcon.style.transform = "rotate("+ nowHeading +"deg)";
+  })
+};
 //ここまで方向を示す印の位置更新についてのプログラム
 
 
@@ -124,7 +131,7 @@ let nowHeadingIcon = document.querySelector("#headingIcon");
 function getPosition(position) {
   const nowLatitude = position.coords.latitude;
   const nowLongitude = position.coords.longitude;
-  const nowHeading = position.coords.heading;
+  //const nowHeading = position.coords.heading;
 
   // すでに現在地が表示されている場合は削除
   if (nowPosition) {
@@ -140,12 +147,6 @@ function getPosition(position) {
   }).addTo(map).openPopup();
   nowIcon._path.setAttribute('id', 'nowIcon');
 
-  if (window.DeviceOrientationEvent) {
-    window.addEventListener('deviceorientation', function(event) {
-        var nowHeading = event.alpha;
-        nowHeadingIcon.style.transform = "rotate("+ nowHeading +"deg)";
-    })
-  };
   getHeading();
 }
 
