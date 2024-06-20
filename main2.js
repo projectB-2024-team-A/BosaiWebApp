@@ -140,7 +140,12 @@ function getPosition(position) {
   }).addTo(map).openPopup();
   nowIcon._path.setAttribute('id', 'nowIcon');
 
-  nowHeadingIcon.style.transform = "rotate("+ nowHeading +"deg)";
+  if (window.DeviceOrientationEvent) {
+    window.addEventListener('deviceorientation', function(event) {
+        var nowHeading = event.alpha;
+        nowHeadingIcon.style.transform = "rotate("+ nowHeading +"deg)";
+    })
+  };
   getHeading();
 }
 
