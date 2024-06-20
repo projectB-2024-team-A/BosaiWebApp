@@ -159,6 +159,7 @@ function getHeading(){
   var x = haedingPosition.left;
   var y = haedingPosition.top;
 
+  console.log("Heading Position:", x, y);
   //CSSのプロパティーを変更して位置を更新
   nowHeadingIcon.style.transform = "translate(" + (x - 35) + "px," + (y - 120) + "px)";
 }
