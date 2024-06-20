@@ -94,6 +94,7 @@ window.onload = function(){
   }, 1000)
 }
 
+/*
 var eventElement = document.getElementById( "map" ) ;
 //マップ上でクリックしたら実行
 eventElement.addEventListener("onmousedown", function(){
@@ -111,6 +112,7 @@ if (window.DeviceOrientationEvent) {
       nowHeadingIcon.style.transform = "rotate("+ nowHeading +"deg)";
   })
 };
+*/
 //ここまで方向を示す印の位置更新についてのプログラム
 
 
@@ -138,6 +140,7 @@ function getPosition(position) {
     map.removeLayer(nowPosition);
   }
 
+  getHeading();
   // 現在地を表示
   nowIcon = L.circleMarker([nowLatitude, nowLongitude], {
     radius: 15,
@@ -148,7 +151,7 @@ function getPosition(position) {
   nowIcon._path.setAttribute('id', 'nowIcon');
   nowPosition = nowIcon;
 
-  getHeading();
+
 }
 
 //方向を示すマークの位置を変更するためだけの関数（mapEventという関数の中で使われている）
