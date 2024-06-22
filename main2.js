@@ -105,14 +105,17 @@ eventElement.addEventListener("onmousedown", function(){
 eventElement.addEventListener("wheel", function(){
   mapEvent();
 });
+*/
 
+//端末が対応していたら
 if (window.DeviceOrientationEvent) {
+  //端末の方向が変わるたびに変更
   window.addEventListener('deviceorientation', function(event) {
       var nowHeading = event.alpha;
       nowHeadingIcon.style.transform = "rotate("+ nowHeading +"deg)";
   })
 };
-*/
+
 //ここまで方向を示す印の位置更新についてのプログラム
 
 
@@ -151,7 +154,7 @@ function getPosition(position) {
   nowIcon._path.setAttribute('id', 'nowIcon');
   nowPosition = nowIcon;
 
-
+  getHeading()
 }
 
 //方向を示すマークの位置を変更するためだけの関数（mapEventという関数の中で使われている）
@@ -163,7 +166,8 @@ function getHeading(){
   var y = haedingPosition.top;
 
   //CSSのプロパティーを変更して位置を更新
-  nowHeadingIcon.style.transform = "translate(" + (x - 35) + "px," + (y - 120) + "px)";
+  nowHeadingIcon.style.left = (x - 35) + "px";
+  nowHeadingIcon.style.top = (y - 30) + "px";
 }
 
 

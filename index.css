@@ -13,7 +13,7 @@ html, body {
 #headingIcon {
     /*位置、透明度、表示順のプロパティー*/
     position: fixed;
-    opacity: 0.4;
+    opacity: 0.23;
     height: 0px;
     width: 0px;
     z-index: 1000;
