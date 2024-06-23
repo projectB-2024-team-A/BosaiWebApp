@@ -96,15 +96,10 @@ window.onload = function(){
 
 
 var eventElement = document.getElementById( "map" ) ;
-//マップ上でクリックしたら実行
-eventElement.addEventListener("onmousedown", function(){
+//方向機能は主にスマホで使うので、スマホでタップしたら位置更新
+window.addEventListener('touchmove', () =>  {
   mapEvent();
-});
-
-//スクロールされたら実行
-eventElement.addEventListener("wheel", function(){
-  mapEvent();
-});
+})
 
 
 //端末が対応していたら
