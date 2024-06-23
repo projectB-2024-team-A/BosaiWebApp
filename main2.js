@@ -176,7 +176,7 @@ function mapEvent(){
   const headingTimer = setInterval(() => {
     let i = 0;
     //方向マークの位置を更新
-    navigator.geolocation.getCurrentPosition(getPosition, errorIndication);
+    navigator.geolocation.getCurrentPosition(getHeading, errorIndication);
     i+=1;
     //もしクリックされなくなったら処理を中止
     eventElement.addEventListener("onmouseup", function(){
