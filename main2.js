@@ -94,7 +94,7 @@ window.onload = function(){
   }, 1000)
 }
 
-/*
+
 var eventElement = document.getElementById( "map" ) ;
 //マップ上でクリックしたら実行
 eventElement.addEventListener("onmousedown", function(){
@@ -105,7 +105,7 @@ eventElement.addEventListener("onmousedown", function(){
 eventElement.addEventListener("wheel", function(){
   mapEvent();
 });
-*/
+
 
 //端末が対応していたら
 if (window.DeviceOrientationEvent) {
