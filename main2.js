@@ -186,6 +186,6 @@ function mapEvent(){
     if (i>200){
       clearInterval(headingTimer)
     }
-  }, 40)
+  }, 100)
   console.log("成功");
 }
