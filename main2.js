@@ -75,10 +75,27 @@ function drawMap() {
 
 
   // OpenStreetMapタイルを使用
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  var baseLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   }).addTo(map);
+
+  // ハザードマップレイヤー（仮想の例）
+var hazardLayer = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/vbm/{z}/{x}/{y}.png', {
+  attribution: '&copy; Hazard Map Data Provider'
+});
+
+// レイヤーコントロールのオブジェクトを作成
+var baseMaps = {
+  "ベースマップ": baseLayer
+};
+
+var overlayMaps = {
+  "ハザードマップ": hazardLayer
+};
+
+// レイヤーコントロールをマップに追加
+L.control.layers(baseMaps, overlayMaps).addTo(map);
 
   //プラグインによる追加箇所
   /*
