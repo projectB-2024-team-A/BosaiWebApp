@@ -129,8 +129,9 @@ function addShelterMarker(latitude, longitude, name) {
 //ここから位置情報関係の関数
 // 位置情報取得に成功した場合に実行される関数
 let nowIcon;
-let headingIcon
-let headingMarker
+let headingIcon;
+let headingMarker;
+let nowIconDesign;
 // 位置情報取得に成功した場合に実行される関数
 function getPosition(position) {
   const nowLatitude = position.coords.latitude;
@@ -154,20 +155,21 @@ function getPosition(position) {
 
 
   //現在地の表示ここから
-  // すでに現在地が表示されている場合は削除
-  if (nowPosition) {
-    map.removeLayer(nowPosition);
-  }
+  nowIconDesign = L.icon({
+    iconUrl:'images/now-icon.png',
+    iconsize:[30, 30],
+    iconAnchor:[15,15],
+    zIndexOffset: 200
+  })
 
-  // 現在地のマークを地図に表示
-  nowIcon = L.circleMarker([nowLatitude, nowLongitude], {
-    radius: 15,
-    color: "#4781ed",
-    fillColor: "#6495ed",
-    fillOpacity: 1
-  }).addTo(map).openPopup();
-  nowIcon._path.setAttribute('id', 'nowIcon');
-  nowPosition = nowIcon;
+  // すでに現在地が表示されている場合は位置を更新、なければ作成
+  if (nowIcon) {
+    nowIcon.setLatLng([nowLatitude,nowLongitude]);
+  }else{
+    nowIcon = L.marker([nowLatitude, nowLongitude], {
+      icon: nowIconDesign,
+    }).addTo(map);
+  }
   //現在地の表示ここまで
 }
 
