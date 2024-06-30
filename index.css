@@ -8,20 +8,3 @@ html, body {
     padding: 0;
     height: 100%;
 }
-
-/*方向を示すためのプロパティー*/
-#headingIcon {
-    /*位置、透明度、表示順のプロパティー*/
-    position: fixed;
-    opacity: 0.23;
-    height: 0px;
-    width: 0px;
-    z-index: 1000;
-    transform-origin: center;
-
-    /*扇型*/
-    border-radius: 100%;
-    border: 50px solid transparent;
-    border-top: 50px solid #6495ed;
-}
-    

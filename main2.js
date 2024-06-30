@@ -1,3 +1,14 @@
+//プラグインのライセンス表示
+/*
+  Leaflet.RotatedMarker
+  https://github.com/bbecquet/Leaflet.RotatedMarker
+  
+  Copyright (c) 2015 Benjamin Becquet
+  Released under the MIT license
+  https://github.com/bbecquet/Leaflet.RotatedMarker/blob/master/LICENSE
+*/
+
+
 // //Firebaseの読み込み(SDKの読み込み)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getDatabase } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
@@ -52,10 +63,10 @@ const shelterMarkers = []; // 避難所のマーカーを保持する配列(情�
 
 // マップを描画する関数
 function drawMap() {
+
   // Geolocation APIに対応しているか確認
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(getPosition, errorIndication);
-  } else {
+  if (!navigator.geolocation) {
+    //対応していなかったら知らせる
     alert("お使いの端末では位置情報を取得できません");
   }
 
@@ -68,7 +79,9 @@ function drawMap() {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   }).addTo(map);
+
   //プラグインによる追加箇所
+  /*
   var compass = new L.Control.Compass({ position: 'topright', autoActive: true, showDigit: true });
   compass.addTo(map);
   var option = {
@@ -83,34 +96,24 @@ function drawMap() {
   }
    
   var lc = L.control.locate(option).addTo(map);
-lc.start();
+  lc.start();
+*/
 }
 
 //ここから方向を示す印の位置更新についてのプログラム
-//1秒ごとに現在位置を更新
 window.onload = function(){
-  setInterval(() => {
-    navigator.geolocation.getCurrentPosition(getPosition, errorIndication);
-  }, 1000)
-}
+  //現在位置を定期的に更新
+  navigator.geolocation.watchPosition(getPosition, errorIndication);
 
-
-var eventElement = document.getElementById( "map" ) ;
-//方向機能は主にスマホで使うので、スマホでタップしたら位置更新
-window.addEventListener('touchmove', () =>  {
-  mapEvent();
-})
-
-
-//端末が対応していたら
-if (window.DeviceOrientationEvent) {
-  //端末の方向が変わるたびに変更
-  window.addEventListener('deviceorientation', function(event) {
+  //端末が対応していたら
+  if (window.DeviceOrientationEvent) {
+    //端末の方向が変わるたびに変更
+    window.addEventListener('deviceorientation', function(event) {
       var nowHeading = event.alpha;
-      nowHeadingIcon.style.transform = "rotate("+ nowHeading +"deg)";
-  })
-};
-
+      headingMarker.setRotationAngle(nowHeading);
+    })
+  };
+}
 //ここまで方向を示す印の位置更新についてのプログラム
 
 
@@ -126,66 +129,50 @@ function addShelterMarker(latitude, longitude, name) {
 //ここから位置情報関係の関数
 // 位置情報取得に成功した場合に実行される関数
 let nowIcon;
-let nowHeadingIcon = document.querySelector("#headingIcon");
+let headingIcon
+let headingMarker
 // 位置情報取得に成功した場合に実行される関数
 function getPosition(position) {
   const nowLatitude = position.coords.latitude;
   const nowLongitude = position.coords.longitude;
-  //const nowHeading = position.coords.heading;
 
+  //向いている方向を示すマークの表示ここから
+  headingIcon = L.icon({
+    iconUrl:'images/heading-icon.png',
+    iconsize:[50, 50],
+    iconAnchor:[25,42]
+  })
+  headingMarker = L.marker([nowLatitude, nowLongitude], {
+    icon: headingIcon,
+    zIndexOffset:-1
+  }).addTo(map);
+
+  if (headingMarker){
+    headingMarker.setLatLng([nowLatitude,nowLongitude]);
+  }
+  //向いている方向を示すマークの表示ここまで
+
+
+  //現在地の表示ここから
   // すでに現在地が表示されている場合は削除
   if (nowPosition) {
     map.removeLayer(nowPosition);
   }
 
-  //getHeading();
-  // 現在地を表示
+  // 現在地のマークを地図に表示
   nowIcon = L.circleMarker([nowLatitude, nowLongitude], {
     radius: 15,
     color: "#4781ed",
     fillColor: "#6495ed",
-    fillOpacity: 0.5,
+    fillOpacity: 1
   }).addTo(map).openPopup();
   nowIcon._path.setAttribute('id', 'nowIcon');
   nowPosition = nowIcon;
-
-  getHeading()
-}
-
-//方向を示すマークの位置を変更するためだけの関数（mapEventという関数の中で使われている）
-function getHeading(){
-  var haedingPosition = nowIcon._path.getBoundingClientRect();
-
-  //マークがある位置を取得
-  var x = haedingPosition.left;
-  var y = haedingPosition.top;
-
-  //CSSのプロパティーを変更して位置を更新
-  nowHeadingIcon.style.left = (x - 35) + "px";
-  nowHeadingIcon.style.top = (y - 30) + "px";
+  //現在地の表示ここまで
 }
 
 
 // 位置情報取得に失敗した場合に実行される関数
-function errorIndication(error) {
-  alert("エラーが発生しました");
-}
-
-//マップをズーム、スクロールしたりしたときに実行する用の関数
-function mapEvent(){
-  const headingTimer = setInterval(() => {
-    let i = 0;
-    //方向マークの位置を更新
-    navigator.geolocation.getCurrentPosition(getHeading, errorIndication);
-    i+=1;
-    //もしクリックされなくなったら処理を中止
-    eventElement.addEventListener("onmouseup", function(){
-      clearInterval(headingTimer)
-    });
-    //クリックしなくなったときにonmouseupが反応しなかった場合の対処
-    if (i>200){
-      clearInterval(headingTimer)
-    }
-  }, 100)
-  console.log("成功");
+function errorIndication() {
+  alert("位置情報を取得する際にエラーが発生しました");
 }
