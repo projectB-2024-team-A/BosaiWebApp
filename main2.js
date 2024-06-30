@@ -142,13 +142,13 @@ function getPosition(position) {
     iconsize:[50, 50],
     iconAnchor:[25,42]
   })
-  headingMarker = L.marker([nowLatitude, nowLongitude], {
-    icon: headingIcon,
-    zIndexOffset:-1
-  }).addTo(map);
 
   if (headingMarker){
     headingMarker.setLatLng([nowLatitude,nowLongitude]);
+  }else{
+    headingMarker = L.marker([nowLatitude, nowLongitude], {
+      icon: headingIcon,
+    }).addTo(map);
   }
   //向いている方向を示すマークの表示ここまで
 
