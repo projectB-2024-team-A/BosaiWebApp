@@ -120,7 +120,9 @@ L.control.layers(baseMaps, overlayMaps).addTo(map);
 //ここから方向を示す印の位置更新についてのプログラム
 window.onload = function(){
   //現在位置を定期的に更新
-  navigator.geolocation.watchPosition(getPosition, errorIndication);
+  setInterval(() => {
+    navigator.geolocation.getCurrentPosition(getPosition, errorIndication);
+  }, 1000)
 
   //端末が対応していたら
   if (window.DeviceOrientationEvent) {
@@ -151,8 +153,11 @@ let headingMarker;
 let nowIconDesign;
 // 位置情報取得に成功した場合に実行される関数
 function getPosition(position) {
-  const nowLatitude = position.coords.latitude;
-  const nowLongitude = position.coords.longitude;
+  //const nowLatitude = position.coords.latitude;
+  //const nowLongitude = position.coords.longitude;
+  const nowLatitude = 35.370636992526165;
+  const nowLongitude = 139.41637668188167;
+
 
   //向いている方向を示すマークの表示ここから
   headingIcon = L.icon({
