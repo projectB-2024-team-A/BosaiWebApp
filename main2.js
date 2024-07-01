@@ -155,9 +155,9 @@ let nowIconDesign;
 function getPosition(position) {
   //const nowLatitude = position.coords.latitude;
   //const nowLongitude = position.coords.longitude;
-  const nowLatitude = 35.370636992526165;
-  const nowLongitude = 139.41637668188167;
-
+  const nowLatitude = 35.3706319867783;
+  const nowLongitude = 139.41604658862806;
+  
 
   //向いている方向を示すマークの表示ここから
   headingIcon = L.icon({
