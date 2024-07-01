@@ -153,10 +153,8 @@ let headingMarker;
 let nowIconDesign;
 // 位置情報取得に成功した場合に実行される関数
 function getPosition(position) {
-  //const nowLatitude = position.coords.latitude;
-  //const nowLongitude = position.coords.longitude;
-  const nowLatitude = 35.3706319867783;
-  const nowLongitude = 139.41604658862806;
+  const nowLatitude = position.coords.latitude;
+  const nowLongitude = position.coords.longitude;
   
 
   //向いている方向を示すマークの表示ここから
