@@ -128,7 +128,7 @@ window.onload = function(){
   //端末が対応していたら
   if (window.DeviceOrientationEvent) {
     //端末の方向が変わるたびに変更
-    window.addEventListener('deviceorientationabsolute', function(event) {
+    window.addEventListener('deviceorientation', function(event) {
       var nowHeading = event.alpha;
       if(i===0){
         alert(nowHeading);
