@@ -127,8 +127,9 @@ window.onload = function(){
   //端末が対応していたら
   if (window.DeviceOrientationEvent) {
     //端末の方向が変わるたびに変更
-    window.addEventListener('deviceorientation', function(event) {
+    window.addEventListener('deviceorientationabsolute', function(event) {
       var nowHeading = event.alpha;
+      alert(nowHeading);
       headingMarker.setRotationAngle(nowHeading);
     })
   };
