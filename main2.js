@@ -250,7 +250,7 @@ document.getElementById("headingButton").onclick = function() {
           .then(response => {
               if (response === "granted") {
                   window.addEventListener("deviceorientation", getHeading);
-                  ShowHeading = true; //方向マークの位置を表示するようにする
+                  showHeading = true; //方向マークの位置を表示するようにする
               } else {
                   alert("デバイスの向きの許可が拒否されました");
               }
@@ -259,8 +259,14 @@ document.getElementById("headingButton").onclick = function() {
               console.error("許可の取得中にエラーが発生しました", error);
           });
     } else {
-        // デバイスの向きが取得出来ないブラウザだった場合
-        alert("デバイスの向きの取得はこのブラウザではサポートされていません");
+      if (window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === 'function') {
+        //iOS 13未満もしくはAndroidの場合
+         showHeading = true; //方向マークの位置を表示するようにする
+         window.addEventListener("deviceorientation", getHeading);
+       } else {
+         // デバイスの向きが取得出来ないブラウザだった場合
+         alert("デバイスの向きの取得はこのブラウザではサポートされていません");
+       }
     }
   }
 };
@@ -269,10 +275,6 @@ document.getElementById("headingButton").onclick = function() {
 function getHeading(){
   window.addEventListener('deviceorientationabsolute', function(event) {
     var nowHeading = event.alpha;
-    if(i===0){
-      alert(nowHeading);
-      i++;
-    }
     headingMarker.setRotationAngle(nowHeading);
   })
 }
