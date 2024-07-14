@@ -58,17 +58,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 let map; // マップオブジェクト
-let nowPosition; // 現在地のマーカー
 const shelterMarkers = []; // 避難所のマーカーを保持する配列(情報を残さないとマーカーの場所が上書きされてしまうため)
 
 // マップを描画する関数
 function drawMap() {
-
-  // Geolocation APIに対応しているか確認
-  if (!navigator.geolocation) {
-    //対応していなかったら知らせる
-    alert("お使いの端末では位置情報を取得できません");
-  }
 
   // マップの初期位置
   map = L.map('map').setView([0, 0], 5); 
@@ -117,28 +110,13 @@ L.control.layers(baseMaps, overlayMaps).addTo(map);
 */
 }
 
-//ここから方向を示す印の位置更新についてのプログラム
+
 window.onload = function(){
   //現在位置を定期的に更新
   setInterval(() => {
     navigator.geolocation.getCurrentPosition(getPosition, errorIndication);
   }, 1000)
-
-  let i=0;
-  //端末が対応していたら
-  if (window.DeviceOrientationEvent) {
-    //端末の方向が変わるたびに変更
-    window.addEventListener('deviceorientation', function(event) {
-      var nowHeading = event.alpha;
-      if(i===0){
-        alert(nowHeading);
-        i++;
-      }
-      headingMarker.setRotationAngle(nowHeading);
-    })
-  };
 }
-//ここまで方向を示す印の位置更新についてのプログラム
 
 
 //ここから関数
@@ -151,15 +129,19 @@ function addShelterMarker(latitude, longitude, name) {
 }
 
 //ここから位置情報関係の関数
-// 位置情報取得に成功した場合に実行される関数
 let nowIcon;
 let headingIcon;
 let headingMarker;
 let nowIconDesign;
+let nowLatitude;
+let nowLongitude;
+let showPosition = false;
+let showHeading = false;
+let bigNowIcon;
 // 位置情報取得に成功した場合に実行される関数
 function getPosition(position) {
-  const nowLatitude = position.coords.latitude;
-  const nowLongitude = position.coords.longitude;
+  nowLatitude = position.coords.latitude;
+  nowLongitude = position.coords.longitude;
   
 
   //向いている方向を示すマークの表示ここから
@@ -169,12 +151,15 @@ function getPosition(position) {
     iconAnchor:[25,42]
   })
 
-  if (headingMarker){
-    headingMarker.setLatLng([nowLatitude,nowLongitude]);
-  }else{
-    headingMarker = L.marker([nowLatitude, nowLongitude], {
-      icon: headingIcon,
-    }).addTo(map);
+  //デバイスの向きが取得出来る場合に方向マークを表示
+  if(showHeading){
+    if (headingMarker){
+      headingMarker.setLatLng([nowLatitude,nowLongitude]);
+    }else{
+      headingMarker = L.marker([nowLatitude, nowLongitude], {
+        icon: headingIcon,
+      }).addTo(map);
+    }
   }
   //向いている方向を示すマークの表示ここまで
 
@@ -194,12 +179,100 @@ function getPosition(position) {
     nowIcon = L.marker([nowLatitude, nowLongitude], {
       icon: nowIconDesign,
     }).addTo(map);
+    //作成すると同時に現在地を表示
+    map.setView([nowLatitude, nowLongitude], 18.5);
   }
   //現在地の表示ここまで
+
+
+  //現在地を強調する
+  if(showPosition){
+    let bigIconDesign = L.icon({
+      iconUrl:'images/big-now-icon.png',
+      iconsize:[150, 150],
+      iconAnchor:[75,75],
+    })
+    if (bigNowIcon) {
+      bigNowIcon.setLatLng([nowLatitude,nowLongitude]);
+    }else{
+      bigNowIcon = L.marker([nowLatitude, nowLongitude], {
+        icon: bigIconDesign,
+      }).addTo(map);
+    }
+  }
+  else{
+    if (bigNowIcon) {
+      map.removeLayer(bigNowIcon); 
+      bigNowIcon = null;
+    }
+  }
 }
 
 
 // 位置情報取得に失敗した場合に実行される関数
+//1回のみアラートで知らせる
+let errorAlert = false;
 function errorIndication() {
-  alert("位置情報を取得する際にエラーが発生しました");
+  if (!errorAlert){
+    // Geolocation APIに対応しているか確認
+    if (!navigator.geolocation) {
+      //対応していなかったら知らせる
+      alert("お使いの端末では位置情報を取得できません");
+    }
+    else{
+      alert("位置情報を取得する際にエラーが発生しました");
+    }
+    errorAlert = true;
+  }
+}
+
+
+//ボタンが押されたら現在地を表示する関数
+document.getElementById("positionButton").onclick = function() {
+  //現在地を強調する
+  showPosition = true;
+  map.setView([nowLatitude, nowLongitude], 18.5);
+ 
+  //10秒たったら強調マークを消す
+  window.setTimeout(() => {
+    showPosition = false;
+  }, 10000);
+};
+
+//ボタンが押されたら方向マークを表示
+document.getElementById("headingButton").onclick = function() {
+  //ボタンを押したらダイアログを表示
+  let answer = confirm("デバイスの向きの取得を許可しますか？");
+  //許可した場合
+  if(answer) {
+    if (typeof DeviceOrientationEvent !== "undefined" && typeof DeviceOrientationEvent.requestPermission === "function") {
+      DeviceOrientationEvent.requestPermission()
+          .then(response => {
+              if (response === "granted") {
+                  window.addEventListener("deviceorientation", getHeading);
+                  ShowHeading = true; //方向マークの位置を表示するようにする
+              } else {
+                  alert("デバイスの向きの許可が拒否されました");
+              }
+          })
+          .catch(error => {
+              console.error("許可の取得中にエラーが発生しました", error);
+          });
+    } else {
+        // デバイスの向きが取得出来ないブラウザだった場合
+        alert("デバイスの向きの取得はこのブラウザではサポートされていません");
+    }
+  }
+};
+
+//デバイスの向きを取得してマークの向きを更新する
+function getHeading(){
+  window.addEventListener('deviceorientationabsolute', function(event) {
+    var nowHeading = event.alpha;
+    if(i===0){
+      alert(nowHeading);
+      i++;
+    }
+    headingMarker.setRotationAngle(nowHeading);
+  })
 }

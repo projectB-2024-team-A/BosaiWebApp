@@ -33,9 +33,21 @@ plugin -->
         <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
     </head>
     <body>
-        <h1>LeafLet</h1>
-        <div id="map">
-            <div id="headingIcon"></div>
+        
+        <!--現在地ボタンなどまとめてmap-contentの中へ-->
+        <div id="map-content">
+            <div id="map">
+                <!--方向マーク-->
+                <div id="headingIcon"></div>
+            </div>
+            <!-- 現在地をズームするボタン -->
+            <button type="button" id="positionButton">
+                <img id = "positionButtonImage" src = "images/now-icon.png" alt = "現在地ボタン">
+            </button>
+            <!-- 方向マークの表示 -->
+            <button type="button" id="headingButton">
+                <img id = "headingButtonImage" src = "images/heading-button.png" alt = "方向マーク">
+            </button>
         </div>
 
         <!-- マーカを回転させるためのプラグイン（方向を示すためのもの） -->

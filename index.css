@@ -2,9 +2,38 @@
 #map {
     width: 100%;
     height: 100vh; /* Full height of the viewport */
+    position: absolute; /* 現在地ボタンをマップの上に表示するため追加 */
 }
 html, body {
     margin: 0;
     padding: 0;
     height: 100%;
+}
+
+#map-content{
+    position: relative; /* 現在地ボタンをマップの上に表示するため追加 */
+}
+
+
+/* htmlで追加したボタン */
+#positionButton{
+    position: absolute; /* 現在地ボタンをマップの上に表示するため追加 */
+    z-index: 1000;
+    top: 100px;
+    right: 10px;
+    background-color: white;
+    padding: 3px;
+}
+
+#positionButtonImage{
+    margin-top: 2px;
+}
+
+#headingButton {
+    position: absolute; /* 現在地ボタンをマップの上に表示するため追加 */
+    z-index: 1000;
+    top: 150px;
+    right: 10px;
+    background-color: white;
+    padding: 0px;
 }
