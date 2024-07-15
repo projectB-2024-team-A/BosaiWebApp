@@ -64,7 +64,7 @@ const shelterMarkers = []; // 避難所のマーカーを保持する配列(情�
 function drawMap() {
 
   // マップの初期位置
-  map = L.map('map').setView([0, 0], 5); 
+  map = L.map('map').setView([35.682839, 139.759455], 5);
 
 
   // OpenStreetMapタイルを使用
@@ -73,18 +73,47 @@ function drawMap() {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   }).addTo(map);
 
+  var tansyokuLayer = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  }).addTo(map);
+
+  var photoLayer = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  }).addTo(map);
+
+
+
   // ハザードマップレイヤー（仮想の例）
-var hazardLayer = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/vbm/{z}/{x}/{y}.png', {
+var kazanLayer = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/vbm/{z}/{x}/{y}.png', {
+  attribution: '&copy; Hazard Map Data Provider'
+});
+
+var tunamiLayer = L.tileLayer('https://disaportaldata.gsi.go.jp/raster/04_tsunami_newlegend_data/{z}/{x}/{y}.png', {
+  attribution: '&copy; Hazard Map Data Provider'
+});
+
+var dosyaLayer = L.tileLayer('https://disaportaldata.gsi.go.jp/raster/05_dosekiryukeikaikuiki/{z}/{x}/{y}.png', {
+  attribution: '&copy; Hazard Map Data Provider'
+});
+
+var kozuiLayer = L.tileLayer('https://disaportaldata.gsi.go.jp/raster/01_flood_l2_shinsuishin_data/{z}/{x}/{y}.png', {
   attribution: '&copy; Hazard Map Data Provider'
 });
 
 // レイヤーコントロールのオブジェクトを作成
 var baseMaps = {
-  "ベースマップ": baseLayer
+  "ベースマップ": baseLayer,
+  "淡色地図": tansyokuLayer,
+  "写真": photoLayer
 };
 
 var overlayMaps = {
-  "ハザードマップ": hazardLayer
+  "火山基本図": kazanLayer,
+  "津波浸水想定マップ": tunamiLayer,
+  "土砂災害警戒区域（土石流）マップ": dosyaLayer,
+  "洪水浸水想定区域マップ": kozuiLayer
 };
 
 // レイヤーコントロールをマップに追加
