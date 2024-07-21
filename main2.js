@@ -62,62 +62,118 @@ const shelterMarkers = []; // 避難所のマーカーを保持する配列(情�
 
 // マップを描画する関数
 function drawMap() {
-
   // マップの初期位置
   map = L.map('map').setView([35.682839, 139.759455], 5);
 
-
-  // OpenStreetMapタイルを使用
+  // レイヤーを定義
   var baseLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-  }).addTo(map);
+  });
 
   var tansyokuLayer = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-  }).addTo(map);
+  });
 
   var photoLayer = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg', {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  });
+
+  // 他のレイヤー
+  var tokyoLayer = L.tileLayer('https://disaportaldata.gsi.go.jp/raster/01_flood_l2_shinsuishin_pref_data/13/{z}/{x}/{y}.png', { 
+    attribution: '&copy; Hazard Map Data Provider'
+  });
+
+  var kanagawaLayer = L.tileLayer('https://disaportaldata.gsi.go.jp/raster/01_flood_l2_shinsuishin_pref_data/14/{z}/{x}/{y}.png', { 
+    attribution: '&copy; Hazard Map Data Provider'
+  });
+
+  var kazanLayer = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/vbm/{z}/{x}/{y}.png', {
+    attribution: '&copy; Hazard Map Data Provider'
+  });
+
+  var tunamiLayer = L.tileLayer('https://disaportaldata.gsi.go.jp/raster/04_tsunami_newlegend_data/{z}/{x}/{y}.png', {
+    attribution: '&copy; Hazard Map Data Provider'
+  });
+
+  var dosyaLayer = L.tileLayer('https://disaportaldata.gsi.go.jp/raster/05_dosekiryukeikaikuiki/{z}/{x}/{y}.png', {
+    attribution: '&copy; Hazard Map Data Provider'
+  });
+
+  var kozuiLayer = L.tileLayer('https://disaportaldata.gsi.go.jp/raster/01_flood_l2_shinsuishin_data/{z}/{x}/{y}.png', {
+    attribution: '&copy; Hazard Map Data Provider'
+  });
+
+  // レイヤーツリーの構造を定義
+  var baseTree = {
+    label: 'Base Layers',
+    children: [
+      {
+        label: 'Map Types',
+        children: [
+          { label: 'OpenStreetMap', layer: baseLayer },
+          { label: '淡色地図', layer: tansyokuLayer },
+          { label: '写真', layer: photoLayer }
+        ]
+      }
+    ]
+  };
+
+  var overlayTree = {
+    label: 'Overlay Layers',
+    children: [
+      {
+        label: 'Hazard Maps',
+        children: [
+          { label: '火山基本図', layer: kazanLayer },
+          { label: '津波浸水想定マップ', layer: tunamiLayer },
+          { label: '土砂災害警戒区域（土石流）マップ', layer: dosyaLayer },
+          { label: '洪水浸水想定区域マップ', layer: kozuiLayer }
+        ]
+      },
+      {
+        label: '都道府県別レイヤー',
+        children: [
+          { label: '東京都', layer: tokyoLayer },
+          { label: '神奈川県', layer: kanagawaLayer }
+        ]
+      }
+    ]
+  };
+
+  // レイヤーコントロールをマップに追加
+  L.control.layers.tree(baseTree, overlayTree, {
+    namedToggle: true,
+    selectorBack: false
   }).addTo(map);
 
+  // 初期レイヤーの追加
+  baseLayer.addTo(map);
 
+  // トグル機能を追加
+  addToggleFunctionality();
+}
 
-  // ハザードマップレイヤー（仮想の例）
-var kazanLayer = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/vbm/{z}/{x}/{y}.png', {
-  attribution: '&copy; Hazard Map Data Provider'
-});
+// トグル機能を追加する関数
+function addToggleFunctionality() {
+  const headers = document.querySelectorAll('.leaflet-layerstree-header');
 
-var tunamiLayer = L.tileLayer('https://disaportaldata.gsi.go.jp/raster/04_tsunami_newlegend_data/{z}/{x}/{y}.png', {
-  attribution: '&copy; Hazard Map Data Provider'
-});
+  headers.forEach(header => {
+    header.addEventListener('click', () => {
+      const children = header.nextElementSibling;
 
-var dosyaLayer = L.tileLayer('https://disaportaldata.gsi.go.jp/raster/05_dosekiryukeikaikuiki/{z}/{x}/{y}.png', {
-  attribution: '&copy; Hazard Map Data Provider'
-});
-
-var kozuiLayer = L.tileLayer('https://disaportaldata.gsi.go.jp/raster/01_flood_l2_shinsuishin_data/{z}/{x}/{y}.png', {
-  attribution: '&copy; Hazard Map Data Provider'
-});
-
-// レイヤーコントロールのオブジェクトを作成
-var baseMaps = {
-  "ベースマップ": baseLayer,
-  "淡色地図": tansyokuLayer,
-  "写真": photoLayer
-};
-
-var overlayMaps = {
-  "火山基本図": kazanLayer,
-  "津波浸水想定マップ": tunamiLayer,
-  "土砂災害警戒区域（土石流）マップ": dosyaLayer,
-  "洪水浸水想定区域マップ": kozuiLayer
-};
-
-// レイヤーコントロールをマップに追加
-L.control.layers(baseMaps, overlayMaps).addTo(map);
+      if (children.classList.contains('leaflet-layerstree-opened')) {
+        children.classList.remove('leaflet-layerstree-opened');
+        children.classList.add('leaflet-layerstree-closed');
+      } else {
+        children.classList.remove('leaflet-layerstree-closed');
+        children.classList.add('leaflet-layerstree-opened');
+      }
+    });
+  });
+}
 
   //プラグインによる追加箇所
   /*
@@ -137,7 +193,6 @@ L.control.layers(baseMaps, overlayMaps).addTo(map);
   var lc = L.control.locate(option).addTo(map);
   lc.start();
 */
-}
 
 
 window.onload = function(){
@@ -304,7 +359,7 @@ document.getElementById("headingButton").onclick = function() {
 //デバイスの向きを取得してマークの向きを更新する
 function getHeading(){
   window.addEventListener('deviceorientationabsolute', function(event) {
-    var nowHeading = event.alpha;
+    var nowHeading = -event.alpha;
     headingMarker.setRotationAngle(nowHeading);
   })
 }

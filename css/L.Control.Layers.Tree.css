@@ -1,0 +1,68 @@
+.leaflet-control-layers-toggle.leaflet-layerstree-named-toggle {
+    margin: 2px 5px;
+    width: auto;
+    height: auto;
+    background-image: none;
+}
+
+.leaflet-layerstree-node {
+    cursor: pointer;
+}
+
+.leaflet-layerstree-header input{
+    margin-left: 0px;
+}
+
+
+.leaflet-layerstree-header {
+    cursor: pointer;
+}
+
+.leaflet-layerstree-header-pointer {
+    cursor: pointer;
+}
+
+.leaflet-layerstree-header label {
+    display: inline-block;
+    cursor: pointer;
+}
+
+.leaflet-layerstree-header-label {
+    cursor: pointer;
+}
+
+.leaflet-layerstree-header-name {
+    cursor: pointer;
+}
+
+.leaflet-layerstree-header-space {
+    cursor: pointer;
+}
+
+.leaflet-layerstree-children {
+    padding-left: 10px;
+}
+
+.leaflet-layerstree-children-nopad {
+    padding-left: 0px;
+}
+
+.leaflet-layerstree-closed {
+    cursor: pointer;
+}
+
+.leaflet-layerstree-opened {
+    cursor: pointer;
+}
+
+.leaflet-layerstree-hide {
+    display: none;
+}
+
+.leaflet-layerstree-nevershow {
+    display: none;
+}
+
+.leaflet-layerstree-expand-collapse {
+    cursor: pointer;
+}
