@@ -304,10 +304,7 @@ document.getElementById("headingButton").onclick = function() {
 //デバイスの向きを取得してマークの向きを更新する
 function getHeading(){
   window.addEventListener('deviceorientationabsolute', function(event) {
-    var nowHeading = event.alpha;
-    if (nowHeading<0){
-      nowHeading += 360;
-    }
+    var nowHeading = -event.alpha;
     headingMarker.setRotationAngle(nowHeading);
   })
 }
