@@ -305,6 +305,9 @@ document.getElementById("headingButton").onclick = function() {
 function getHeading(){
   window.addEventListener('deviceorientationabsolute', function(event) {
     var nowHeading = event.alpha;
+    if (nowHeading<0){
+      nowHeading += 360;
+    }
     headingMarker.setRotationAngle(nowHeading);
   })
 }
