@@ -410,7 +410,7 @@ function nowIconTracking() {
   if(!screenWidth > screenHeight){
     divideLeft = 1/10;
     divideRight = 9/10;
-    divideTop = 2/5;
+    divideTop = 1/10;
     divideBottom = 9/10;
   }
 
