@@ -410,8 +410,8 @@ function nowIconTracking() {
   if(!screenWidth > screenHeight){
     divideLeft = 3/10;
     divideRight = 7/10;
-    divideTop = 2/5;
-    divideBottom = 4/5;
+    divideTop = 1/10;
+    divideBottom = 9/10;
   }
 
   //画面を縦横それぞれ等分し、その中の真ん中の範囲から外れた場合に現在地の追従を解除する
