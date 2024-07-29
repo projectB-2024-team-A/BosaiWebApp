@@ -37,3 +37,12 @@ html, body {
     background-color: white;
     padding: 0px;
 }
+
+#trackingButton{
+    position: absolute; /* 現在地を追従するボタンをマップの上に表示するため追加 */
+    z-index: 1000;
+    top: 200px;
+    right: 10px;
+    background-color: white;
+    padding: 0px;
+}
