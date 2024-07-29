@@ -408,15 +408,16 @@ function nowIconTracking() {
 
   //画面が縦長だった場合、分割数を調整
   if(!screenWidth > screenHeight){
-    divideLeft = 3/10;
-    divideRight = 7/10;
-    divideTop = 1/10;
+    divideLeft = 1/10;
+    divideRight = 9/10;
+    divideTop = 2/5;
     divideBottom = 9/10;
   }
 
   //画面を縦横それぞれ等分し、その中の真ん中の範囲から外れた場合に現在地の追従を解除する
   if(screenWidth*divideLeft > nowIconPosition.left || nowIconPosition.right>screenWidth*divideRight || screenHeight*divideTop > nowIconPosition.top || nowIconPosition.bottom>screenHeight*divideBottom){
     trackingFlag = false;
+    alert("中央から外れました");
   }
   else{
     //現在地マークを中央にセット
