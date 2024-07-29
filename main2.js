@@ -224,17 +224,11 @@ let showHeading = false;
 let bigNowIcon;
 
 let trackingFlag = true; //現在地の追従を管理するフラグ
-let otamesiCount = 0; //お試し
 
 // 位置情報取得に成功した場合に実行される関数
 function getPosition(position) {
   nowLatitude = position.coords.latitude;
   nowLongitude = position.coords.longitude;
-  
-  //お試し3行
-  nowLatitude=nowLatitude+otamesiCount*0.00001;
-  nowLongitude=nowLongitude+otamesiCount*0.00001;
-  otamesiCount+=1;
 
   //向いている方向を示すマークの表示ここから
   headingIcon = L.icon({
@@ -417,7 +411,6 @@ function nowIconTracking() {
   //画面を縦横それぞれ等分し、その中の真ん中の範囲から外れた場合に現在地の追従を解除する
   if(screenWidth*divideLeft > nowIconPosition.left || nowIconPosition.right>screenWidth*divideRight || screenHeight*divideTop > nowIconPosition.top || nowIconPosition.bottom>screenHeight*divideBottom){
     trackingFlag = false;
-    alert("中央から外れました");
   }
   else{
     //現在地マークを中央にセット
