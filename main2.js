@@ -194,8 +194,26 @@ function addToggleFunctionality() {
   lc.start();
 */
 
-
+let nowIconDesign;
 window.onload = function(){
+  //DeviceMotionEventが対応している場合、現在地マークを方向が分かるものに変更
+  if (window.DeviceMotionEvent) {
+    nowIconDesign = L.icon({
+      iconUrl:'images/triangle-icon.png',
+      iconsize:[40, 40],
+      iconAnchor:[20,20],
+      zIndexOffset: 200
+    })
+  }
+  else{
+      nowIconDesign = L.icon({
+      iconUrl:'images/now-icon.png',
+      iconsize:[30, 30],
+      iconAnchor:[15,15],
+      zIndexOffset: 200
+    })
+  }
+
   //現在位置を定期的に更新
   setInterval(() => {
     navigator.geolocation.getCurrentPosition(getPosition, errorIndication);
@@ -216,7 +234,6 @@ function addShelterMarker(latitude, longitude, name) {
 let nowIcon;
 let headingIcon;
 let headingMarker;
-let nowIconDesign;
 let nowLatitude;
 let nowLongitude;
 let showPosition = false;
@@ -251,13 +268,6 @@ function getPosition(position) {
 
 
   //現在地の表示ここから
-  nowIconDesign = L.icon({
-    iconUrl:'images/now-icon.png',
-    iconsize:[30, 30],
-    iconAnchor:[15,15],
-    zIndexOffset: 200
-  })
-
   // すでに現在地が表示されている場合は位置を更新、なければ作成
   if (nowIcon) {
     nowIcon.setLatLng([nowLatitude,nowLongitude]);
@@ -268,6 +278,7 @@ function getPosition(position) {
     //作成すると同時に現在地を表示
     map.setView([nowLatitude, nowLongitude], 18.5);
   }
+  nowIcon.setRotationAngle(runningDirection);
   //現在地の表示ここまで
 
   //現在地マークの追従機能について
@@ -416,4 +427,18 @@ function nowIconTracking() {
     //現在地マークを中央にセット
     map.setView([nowLatitude, nowLongitude]);  
   }
+}
+
+
+//進行方向の表示
+let runningDirection;
+if (window.DeviceMotionEvent) {
+  window.addEventListener('devicemotion', function(event) {
+    let accel = event.accelerationIncludingGravity;
+    let x = accel.x;
+    let y = accel.y;
+
+    runningDirection = Math.atan2(x, y) * 180 / Math.PI;
+    console.log(runningDirection);
+  });
 }
