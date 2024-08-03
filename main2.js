@@ -194,7 +194,7 @@ function addToggleFunctionality() {
   lc.start();
 */
 
-let nowIconDesign;
+const device = navigator.userAgent.toLowerCase();
 window.onload = function(){
   switchHeading();
   switchDirection();
@@ -236,6 +236,7 @@ function addShelterMarker(latitude, longitude, name) {
 let nowIcon;
 let headingIcon;
 let headingMarker;
+let nowIconDesign;
 let nowLatitude;
 let nowLongitude;
 let showPosition = false;
