@@ -196,8 +196,10 @@ function addToggleFunctionality() {
 
 let nowIconDesign;
 window.onload = function(){
-  //DeviceMotionEventが対応している場合、現在地マークを方向が分かるものに変更
-  if (window.DeviceMotionEvent) {
+  switchHeading();
+  switchDirection();
+
+  if(showDirection){
     nowIconDesign = L.icon({
       iconUrl:'images/triangle-icon.png',
       iconsize:[40, 40],
@@ -206,7 +208,7 @@ window.onload = function(){
     })
   }
   else{
-      nowIconDesign = L.icon({
+    nowIconDesign = L.icon({
       iconUrl:'images/now-icon.png',
       iconsize:[30, 30],
       iconAnchor:[15,15],
@@ -341,35 +343,28 @@ document.getElementById("positionButton").onclick = function() {
   }, 10000);
 };
 
-//ボタンが押されたら方向マークを表示
-document.getElementById("headingButton").onclick = function() {
-  //ボタンを押したらダイアログを表示
-  let answer = confirm("デバイスの向きの取得を許可しますか？");
-  //許可した場合
-  if(answer) {
+//方向マークのオンオフ
+function switchHeading() {
+  //センサー情報が使えない場合は許可を求める
+  if (/android/.test(device)) {
+    //Androidの場合
+    showHeading = true; //方向マークの位置を表示するようにする
+    getHeading();
+  }
+  else if (/iphone|ipad|ipod/.test(device)){
     if (typeof DeviceOrientationEvent !== "undefined" && typeof DeviceOrientationEvent.requestPermission === "function") {
-      DeviceOrientationEvent.requestPermission()
-          .then(response => {
-              if (response === "granted") {
-                  window.addEventListener("deviceorientation", getHeading);
-                  showHeading = true; //方向マークの位置を表示するようにする
-              } else {
-                  alert("デバイスの向きの許可が拒否されました");
-              }
-          })
-          .catch(error => {
-              console.error("許可の取得中にエラーが発生しました", error);
-          });
-    } else {
-      let device = navigator.userAgent.toLowerCase();
-      if (!/iphone|ipad|ipod/.test(device) && !/android/.test(device)) {
-        // デバイスの向きが取得出来ないブラウザだった場合
-        alert("デバイスの向きの取得はこのブラウザではサポートされていません");
-      } else if (/android/.test(device)) {
-        //Androidの場合
-        showHeading = true; //方向マークの位置を表示するようにする
-        window.addEventListener("deviceorientation", getHeading);
-      }
+    DeviceOrientationEvent.requestPermission()
+        .then(response => {
+            if (response === "granted") {
+                getHeading();
+                showHeading = true; //方向マークの位置を表示するようにする
+            } else {
+                alert("デバイスの向きの許可が拒否されました");
+            }
+        })
+        .catch(error => {
+            console.error("許可の取得中にエラーが発生しました", error);
+        });
     }
   }
 };
@@ -430,9 +425,36 @@ function nowIconTracking() {
 }
 
 
+
+let showDirection = false;
+function switchDirection(){
+  if (/android/.test(device)) {
+    //Androidの場合
+    showDirection = true; //アイコンを表示するようにする
+    getDirection();
+  }
+  else if (/iphone|ipad|ipod/.test(device)){
+    if (typeof DeviceMotionEvent !== "undefined") {
+      if (typeof DeviceMotionEvent.requestPermission === "function") {
+          // iOS 13 以降や特定のブラウザでは、ユーザーの許可が必要
+          DeviceMotionEvent.requestPermission().then(function(permissionState) {
+              if (permissionState === "granted") {
+                getDirection();
+                showDirection = true;
+              } else {
+                alert("デバイスの加速度の取得の許可が拒否されました");
+              }
+          }).catch(function(error) {
+            console.error("許可の取得中にエラーが発生しました", error);
+          });
+      }
+    }
+  }
+}
+
 //進行方向の表示
 let runningDirection;
-if (window.DeviceMotionEvent) {
+function getDirection(){
   window.addEventListener('devicemotion', function(event) {
     let accel = event.accelerationIncludingGravity;
     let x = accel.x;
@@ -440,5 +462,6 @@ if (window.DeviceMotionEvent) {
 
     runningDirection = Math.atan2(x, y) * 180 / Math.PI;
     console.log(runningDirection);
-  });
+    nowIcon.setRotationAngle(nowHeading+runningDirection);
+  })
 }
