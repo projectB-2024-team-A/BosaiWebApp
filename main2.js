@@ -194,27 +194,9 @@ function addToggleFunctionality() {
   lc.start();
 */
 
-const device = navigator.userAgent.toLowerCase();
+
 window.onload = function(){
   switchHeading();
-  switchDirection();
-
-  if(showDirection){
-    nowIconDesign = L.icon({
-      iconUrl:'images/triangle-icon.png',
-      iconsize:[40, 40],
-      iconAnchor:[20,20],
-      zIndexOffset: 200
-    })
-  }
-  else{
-    nowIconDesign = L.icon({
-      iconUrl:'images/now-icon.png',
-      iconsize:[30, 30],
-      iconAnchor:[15,15],
-      zIndexOffset: 200
-    })
-  }
 
   //現在位置を定期的に更新
   setInterval(() => {
@@ -271,6 +253,13 @@ function getPosition(position) {
 
 
   //現在地の表示ここから
+  nowIconDesign = L.icon({
+    iconUrl:'images/now-icon.png',
+    iconsize:[30, 30],
+    iconAnchor:[15,15],
+    zIndexOffset: 200
+  })
+
   // すでに現在地が表示されている場合は位置を更新、なければ作成
   if (nowIcon) {
     nowIcon.setLatLng([nowLatitude,nowLongitude]);
@@ -345,6 +334,7 @@ document.getElementById("positionButton").onclick = function() {
 };
 
 //方向マークのオンオフ
+const device = navigator.userAgent.toLowerCase();
 function switchHeading() {
   //センサー情報が使えない場合は許可を求める
   if (/android/.test(device)) {
@@ -423,46 +413,4 @@ function nowIconTracking() {
     //現在地マークを中央にセット
     map.setView([nowLatitude, nowLongitude]);  
   }
-}
-
-
-
-let showDirection = false;
-function switchDirection(){
-  if (/android/.test(device)) {
-    //Androidの場合
-    showDirection = true; //アイコンを表示するようにする
-    getDirection();
-  }
-  else if (/iphone|ipad|ipod/.test(device)){
-    if (typeof DeviceMotionEvent !== "undefined") {
-      if (typeof DeviceMotionEvent.requestPermission === "function") {
-          // iOS 13 以降や特定のブラウザでは、ユーザーの許可が必要
-          DeviceMotionEvent.requestPermission().then(function(permissionState) {
-              if (permissionState === "granted") {
-                getDirection();
-                showDirection = true;
-              } else {
-                alert("デバイスの加速度の取得の許可が拒否されました");
-              }
-          }).catch(function(error) {
-            console.error("許可の取得中にエラーが発生しました", error);
-          });
-      }
-    }
-  }
-}
-
-//進行方向の表示
-let runningDirection;
-function getDirection(){
-  window.addEventListener('devicemotion', function(event) {
-    let accel = event.accelerationIncludingGravity;
-    let x = accel.x;
-    let y = accel.y;
-
-    runningDirection = Math.atan2(x, y) * 180 / Math.PI;
-    console.log(runningDirection);
-    nowIcon.setRotationAngle(nowHeading+runningDirection);
-  })
 }
